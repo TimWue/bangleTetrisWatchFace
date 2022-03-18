@@ -53,5 +53,5 @@ setWatch(() => {
   rotate();
 }, BTN1,{repeat:true});
 
-Bangle.on('touch', function(button, xy) {console.log(button);x += button*blockSize; });
+Bangle.on('touch', function(button, xy) {console.log(button);x += button*blockWidth; });
 setInterval(()=> {fallBlock();},1000);
