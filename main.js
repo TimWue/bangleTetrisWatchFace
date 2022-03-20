@@ -6,7 +6,18 @@ const midWidth = Math.floor(g.getWidth()/2);
 const maxRad = 50;
 const blockWidth = 10;
 
-// Blocks
+// Images
+
+var blockI = require("heatshrink").decompress(atob("qEU4UB/9H///BIO6n1VACVq1QAQ1NrFwIAB34DC/wID/QED9NsJgfAAYUDBAcPAgcpCf4T/Cf4T/CYdv/4AC34EDABHptWqACGpCaYA="));
+
+var blockSquare = require("heatshrink").decompress(atob("lEo4UC9H/A4P//8kwmqABFVABFfDAIAF+tQFoUD4AECgoJ/BP4JVrgJHmqz/BP6zzqoAIyoIHqw="));
+
+var blockL = require("heatshrink").decompress(atob("lE84UBoH8///BIOg7dVABGqAAeVBJusFoUCBP4J/BMmrZwP//xF/BP6991QADCYgJIgfAAgU6BP4J/BKuvWYQAE/SuEABwA="));
+
+var blockS = require("heatshrink").decompress(atob("lE84UB9FH///BINjjdVABFq1QACyoJDt4aB//+BIlsFoUDBP4J/BMlrWYbBD1QTEBoX//QJDgHAAYUKBP4J/BKtvUoYJEtS4D36zDBImACYbVDqwJ/BP4JfWYgJEW4eqBIdVBAep"));
+
+var blockT = require("heatshrink").decompress(atob("nko4UBn/6///BIO55Nq1QAMBx1vEgIAB34EDAAf6tg9D4ADCgYEDhQO/B34O/B0Fq1QAC2AJChwID1QOE1//AAP+BwlVAAegDoUCyoKEB34O/B34Oz1QADByYA=="));
+
 const getIBlock = (x,y)=>{
   return[x,y,x+4*blockWidth,y,x+4*blockWidth, y+blockWidth,x,y+blockWidth]; 
 };
@@ -48,7 +59,6 @@ const getTBlock = (x,y)=>{
 
 const blockFuncs = [getIBlock,getSquaredBlock,getLBlock,getSBlock,getTBlock];
 const colors = [{r:1,g:0,b:0},{r:0,g:1,b:0},{r:0,g:0,b:1},{r:1,g:1,b:0},{r:0,g:1,b:1}];
-
 // Initial Settings
 let y=0;
 let x = 25;
@@ -118,6 +128,7 @@ const drawWhiteContainer = (x,y,key,value)=>{
   const pad = 2;
   g.setColor(1,1,1);
   g.clearRect(x,y, x + w,y+h);
+
   g.fillRect(x,y, x + w,y+h);
   g.setColor(0,0,0);
   const a = g.drawRect(x + pad, y+pad, x + w -pad,y+h-pad);
@@ -153,7 +164,8 @@ g.clearRect(10,0,twoThirdWidth-38,screenHeight);
 
 const draw = ()=>{
   clearArea();
-  fallBlock();
+
+fallBlock();
 };
 
 setWatch(() => {
@@ -171,10 +183,27 @@ const drawInformation= ()=>{
 
 };
 
+// Start Clock-Face
 g.clear();
 drawBackground();
 drawWall(twoThirdWidth-35);
 drawWall(0);
 drawInformation();
-setInterval(()=> {drawInformation();},60000);
-setInterval(()=> {draw();},1000);
+setInterval(()=> drawInformation,60000);
+
+var blockInterval = setInterval(draw,1000);
+
+Bangle.on('lcdPower',on=>{
+  if (blockInterval) clearInterval(blockInterval);
+  blockInterval = undefined;
+  if (on) {
+    blockInterval = setInterval(draw, 1000);
+    draw(); // draw immediately
+  }
+});
+
+// Show launcher when middle button pressed
+Bangle.setUI("clock");
+// Load widgets
+Bangle.loadWidgets();
+Bangle.drawWidgets();
