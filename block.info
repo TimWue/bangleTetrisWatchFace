@@ -1,0 +1,6 @@
+{
+  "id":"block",
+  "name":"Block-Clock",
+  "type":"clock",
+  "src":"block.app.js"
+}
